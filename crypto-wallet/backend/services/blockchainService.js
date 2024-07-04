@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
+const web3 = new Web3('https://mainnet.infura.io/v3/8a9b30ac388647138789057e70c12652');
 
 const createEthereumWallet = () => {
     const account = web3.eth.accounts.create();
