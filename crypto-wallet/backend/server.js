@@ -1,21 +1,15 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const userRoutes = require('./routes/userRoutes');
+const cors = require('cors');
 const blockchainRoutes = require('./routes/blockchainRoutes');
 
 const app = express();
-app.use(bodyParser.json());
-app.use('/api/users', userRoutes);
-app.use('/api/blockchain', blockchainRoutes);
+const port = process.env.PORT || 5000;
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = 'your_mongo_uri_here';
+app.use(cors());
+app.use(express.json());
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+app.use('/api', blockchainRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
 });
