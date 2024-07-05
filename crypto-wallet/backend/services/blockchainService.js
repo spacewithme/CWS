@@ -1,16 +1,20 @@
-const Web3 = require('web3');
+const express = require('express');
+const { createEthereumWallet, getEthereumBalance } = require('../services/ethereumService');
 
-// Replace 'YOUR_INFURA_PROJECT_ID' with your actual Infura project ID
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/8a9b30ac388647138789057e70c12652'));
+const router = express.Router();
 
-const createEthereumWallet = () => {
-    const account = web3.eth.accounts.create();
-    return account;
-};
+router.post('/wallet/ethereum', (req, res) => {
+    const wallet = createEthereumWallet();
+    res.json(wallet);
+});
 
-const getEthereumBalance = async (address) => {
-    const balance = await web3.eth.getBalance(address);
-    return web3.utils.fromWei(balance, 'ether');
-};
+router.get('/balance/ethereum/:address', async (req, res) => {
+    try {
+        const balance = await getEthereumBalance(req.params.address);
+        res.json({ balance });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-module.exports = { createEthereumWallet, getEthereumBalance };
+module.exports = router;
