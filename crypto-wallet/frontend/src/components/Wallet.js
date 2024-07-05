@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
-import { createEthereumWallet, createBitcoinWallet, createDogecoinWallet } from '../services/blockchainService';
+import axios from 'axios';
 
 const Wallet = () => {
     const [wallet, setWallet] = useState(null);
 
-    const handleCreateWallet = async (type) => {
-        let newWallet;
-        if (type === 'ethereum') {
-            newWallet = await createEthereumWallet();
-        } else if (type === 'bitcoin') {
-            newWallet = await createBitcoinWallet();
-        } else if (type === 'dogecoin') {
-            newWallet = await createDogecoinWallet();
+    const createWallet = async () => {
+        try {
+            const response = await axios.post('/api/wallet/ethereum');
+            setWallet(response.data);
+        } catch (error) {
+            console.error('Error creating wallet', error);
         }
-        setWallet(newWallet);
     };
 
     return (
         <div>
-            <h2>Create Wallet</h2>
-            <button onClick={() => handleCreateWallet('ethereum')}>Create Ethereum Wallet</button>
-            <button onClick={() => handleCreateWallet('bitcoin')}>Create Bitcoin Wallet</button>
-            <button onClick={() => handleCreateWallet('dogecoin')}>Create Dogecoin Wallet</button>
+            <h1>Create Ethereum Wallet</h1>
+            <button onClick={createWallet}>Create Wallet</button>
             {wallet && (
                 <div>
-                    <h3>Wallet Details</h3>
                     <p>Address: {wallet.address}</p>
                     <p>Private Key: {wallet.privateKey}</p>
                 </div>
