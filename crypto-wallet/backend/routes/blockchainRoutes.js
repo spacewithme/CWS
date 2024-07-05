@@ -1,41 +1,20 @@
 const express = require('express');
-const { createEthereumWallet, getEthereumBalance } = require('../services/blockchainService');
-const { createBitcoinWallet, getBitcoinBalance } = require('../services/bitcoinService');
-const { createDogecoinWallet, getDogecoinBalance } = require('../services/dogecoinService');
+const { createEthereumWallet, getEthereumBalance } = require('../services/ethereumService');
 
 const router = express.Router();
 
-// Ethereum routes
-router.get('/create-ethereum-wallet', (req, res) => {
+router.post('/wallet/ethereum', (req, res) => {
     const wallet = createEthereumWallet();
     res.json(wallet);
 });
 
-router.get('/ethereum-balance/:address', async (req, res) => {
-    const balance = await getEthereumBalance(req.params.address);
-    res.json({ balance });
-});
-
-// Bitcoin routes
-router.get('/create-bitcoin-wallet', (req, res) => {
-    const wallet = createBitcoinWallet();
-    res.json(wallet);
-});
-
-router.get('/bitcoin-balance/:address', async (req, res) => {
-    const balance = await getBitcoinBalance(req.params.address);
-    res.json({ balance });
-});
-
-// Dogecoin routes
-router.get('/create-dogecoin-wallet', (req, res) => {
-    const wallet = createDogecoinWallet();
-    res.json(wallet);
-});
-
-router.get('/dogecoin-balance/:address', async (req, res) => {
-    const balance = await getDogecoinBalance(req.params.address);
-    res.json({ balance });
+router.get('/balance/ethereum/:address', async (req, res) => {
+    try {
+        const balance = await getEthereumBalance(req.params.address);
+        res.json({ balance });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 module.exports = router;
